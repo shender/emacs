@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>Emacs Starter Kit</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-08-29 17:31:22 CEST"/>
+<meta name="generated" content="2011-08-29 19:50:14 CEST"/>
 <meta name="author" content="Igor Shenderovich"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -88,8 +88,113 @@ lang="en" xml:lang="en">
 <h1 class="title">Emacs Starter Kit</h1>
 
 
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Загрузка основных пакетов.</a></li>
+<li><a href="#sec-2">Редактирование текста.</a>
+<ul>
+<li><a href="#sec-2-1">Русский язык. </a></li>
+<li><a href="#sec-2-2">Настройка copy-paste </a></li>
+<li><a href="#sec-2-3">ispell. </a></li>
+<li><a href="#sec-2-4">Поиск и замена. </a></li>
+<li><a href="#sec-2-5">Редактирование при помощи <code>sudo</code>. </a></li>
+<li><a href="#sec-2-6">Выделение текста. </a></li>
+<li><a href="#sec-2-7">Цитирование и комментирование. </a></li>
+<li><a href="#sec-2-8">Всякое по мелочи. </a></li>
+<li><a href="#sec-2-9">Типографика: окавычивание выделенного слова.</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">Файл с паролями.</a></li>
+<li><a href="#sec-4">Jabber.</a>
+<ul>
+<li><a href="#sec-4-1">Настройки соединения</a></li>
+<li><a href="#sec-4-2">Хоткеи</a>
+<ul>
+<li><a href="#sec-4-2-1">Операции внутри буфера </a></li>
+<li><a href="#sec-4-2-2">Подключение и отключение </a></li>
+</ul>
+</li>
+<li><a href="#sec-4-3">Настройки внешнего вида чата</a>
+<ul>
+<li><a href="#sec-4-3-1">Формат ростера</a></li>
+<li><a href="#sec-4-3-2">Формат строчек чата</a></li>
+<li><a href="#sec-4-3-3">Цвета</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-4">Хуки на jabber-mode</a></li>
+<li><a href="#sec-4-5">История</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">LaTeX.</a>
+<ul>
+<li><a href="#sec-5-1">Основные особенности моды.</a></li>
+<li><a href="#sec-5-2">Хоткеи.</a></li>
+<li><a href="#sec-5-3">SyncTeX и обратный поиск.</a></li>
+<li><a href="#sec-5-4">Автовставка скобок.</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">Org-mode.</a>
+<ul>
+<li><a href="#sec-6-1">Общие параметры. </a></li>
+<li><a href="#sec-6-2">Дополнительные библиотеки.</a></li>
+<li><a href="#sec-6-3">Хоткеи.</a></li>
+<li><a href="#sec-6-4">Функции. </a>
+<ul>
+<li><a href="#sec-6-4-1">Набор функций для org-capture. </a></li>
+<li><a href="#sec-6-4-2">Выведение плана недели в область извещений. </a></li>
+<li><a href="#sec-6-4-3">Публикация. </a></li>
+<li><a href="#sec-6-4-4">Всплывающие сообщения. </a></li>
+</ul>
+</li>
+<li><a href="#sec-6-5">Calendar. </a></li>
+</ul>
+</li>
+<li><a href="#sec-7">Git.</a></li>
+<li><a href="#sec-8">Внешний вид редактора.</a>
+<ul>
+<li><a href="#sec-8-1">Тулбар и меню. </a></li>
+<li><a href="#sec-8-2">Cкроллинг. </a></li>
+<li><a href="#sec-8-3">Настройка темы. </a></li>
+<li><a href="#sec-8-4">Modeline. </a></li>
+<li><a href="#sec-8-5">Не спамить минибуфер. </a></li>
+</ul>
+</li>
+<li><a href="#sec-9">Работа с буферами и окнами. </a>
+<ul>
+<li><a href="#sec-9-1">Перемещение по окнам. </a></li>
+<li><a href="#sec-9-2">Переключение между буферами. </a></li>
+<li><a href="#sec-9-3">Закрытие буфера: <code>F12</code>. </a></li>
+<li><a href="#sec-9-4">Ibuffer. </a></li>
+</ul>
+</li>
+<li><a href="#sec-10">Хоткеи из общей моды.</a>
+<ul>
+<li><a href="#sec-10-1">Закладки. </a></li>
+<li><a href="#sec-10-2">Выход и закрытие емакса. </a></li>
+<li><a href="#sec-10-3">Saveplace. </a></li>
+</ul>
+</li>
+<li><a href="#sec-11">Емакс и Хром.</a></li>
+<li><a href="#sec-12">Mail-mode и post-mode. </a>
+<ul>
+<li><a href="#sec-12-1">Mail-mode. </a></li>
+</ul>
+</li>
+<li><a href="#sec-13">Web. </a></li>
+<li><a href="#sec-14">Почта. </a>
+<ul>
+<li><a href="#sec-14-1">Общее описание процесса. </a></li>
+<li><a href="#sec-14-2">Новый тип ссылок: <code>mutt:</code>. </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Загрузка основных пакетов. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="load">load</span></span></h2>
+<h2 id="sec-1">Загрузка основных пакетов. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="load">load</span></span></h2>
 <div class="outline-text-2" id="text-1">
 
 
@@ -117,14 +222,14 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Редактирование текста. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="edit">edit</span></span></h2>
+<h2 id="sec-2">Редактирование текста. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="edit">edit</span></span></h2>
 <div class="outline-text-2" id="text-2">
 
 
 </div>
 
 <div id="outline-container-2-1" class="outline-3">
-<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Русский язык. </h3>
+<h3 id="sec-2-1">Русский язык. </h3>
 <div class="outline-text-3" id="text-2-1">
 
 
@@ -160,7 +265,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-2" class="outline-3">
-<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Настройка copy-paste </h3>
+<h3 id="sec-2-2">Настройка copy-paste </h3>
 <div class="outline-text-3" id="text-2-2">
 
 
@@ -208,7 +313,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-3" class="outline-3">
-<h3 id="sec-2-3"><span class="section-number-3">2.3</span> ispell. </h3>
+<h3 id="sec-2-3">ispell. </h3>
 <div class="outline-text-3" id="text-2-3">
 
 
@@ -233,7 +338,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-4" class="outline-3">
-<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Поиск и замена. </h3>
+<h3 id="sec-2-4">Поиск и замена. </h3>
 <div class="outline-text-3" id="text-2-4">
 
 
@@ -271,7 +376,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-5" class="outline-3">
-<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Редактирование при помощи <code>sudo</code>. </h3>
+<h3 id="sec-2-5">Редактирование при помощи <code>sudo</code>. </h3>
 <div class="outline-text-3" id="text-2-5">
 
 
@@ -297,7 +402,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-6" class="outline-3">
-<h3 id="sec-2-6"><span class="section-number-3">2.6</span> Выделение текста. </h3>
+<h3 id="sec-2-6">Выделение текста. </h3>
 <div class="outline-text-3" id="text-2-6">
 
 
@@ -320,7 +425,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-7" class="outline-3">
-<h3 id="sec-2-7"><span class="section-number-3">2.7</span> Цитирование и комментирование. </h3>
+<h3 id="sec-2-7">Цитирование и комментирование. </h3>
 <div class="outline-text-3" id="text-2-7">
 
 
@@ -355,7 +460,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-8" class="outline-3">
-<h3 id="sec-2-8"><span class="section-number-3">2.8</span> Всякое по мелочи. </h3>
+<h3 id="sec-2-8">Всякое по мелочи. </h3>
 <div class="outline-text-3" id="text-2-8">
 
 
@@ -384,7 +489,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-2-9" class="outline-3">
-<h3 id="sec-2-9"><span class="section-number-3">2.9</span> Типографика: окавычивание выделенного слова. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="typo">typo</span></span></h3>
+<h3 id="sec-2-9">Типографика: окавычивание выделенного слова. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="typo">typo</span></span></h3>
 <div class="outline-text-3" id="text-2-9">
 
 
@@ -428,7 +533,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Файл с паролями. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="secrets">secrets</span></span></h2>
+<h2 id="sec-3">Файл с паролями. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="secrets">secrets</span></span></h2>
 <div class="outline-text-2" id="text-3">
 
 <p>Для всех паролей от учётных записей и т.д. создан специальный <a href="secrets.el.gpg">файл</a>
@@ -469,7 +574,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> Jabber. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="jabber">jabber</span></span></h2>
+<h2 id="sec-4">Jabber. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="jabber">jabber</span></span></h2>
 <div class="outline-text-2" id="text-4">
 
 <p>Логины и пароли от аккаунтов спрятаны в зашифрованном файле. 
@@ -478,7 +583,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-4-1" class="outline-3">
-<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Настройки соединения &nbsp;&nbsp;&nbsp;<span class="tag"><span class="connection">connection</span></span></h3>
+<h3 id="sec-4-1">Настройки соединения &nbsp;&nbsp;&nbsp;<span class="tag"><span class="connection">connection</span></span></h3>
 <div class="outline-text-3" id="text-4-1">
 
 
@@ -504,14 +609,14 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-4-2" class="outline-3">
-<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Хоткеи &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
+<h3 id="sec-4-2">Хоткеи &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
 <div class="outline-text-3" id="text-4-2">
 
 
 </div>
 
 <div id="outline-container-4-2-1" class="outline-4">
-<h4 id="sec-4-2-1"><span class="section-number-4">4.2.1</span> Операции внутри буфера </h4>
+<h4 id="sec-4-2-1">Операции внутри буфера </h4>
 <div class="outline-text-4" id="text-4-2-1">
 
 
@@ -536,7 +641,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-4-2-2" class="outline-4">
-<h4 id="sec-4-2-2"><span class="section-number-4">4.2.2</span> Подключение и отключение </h4>
+<h4 id="sec-4-2-2">Подключение и отключение </h4>
 <div class="outline-text-4" id="text-4-2-2">
 
 
@@ -578,14 +683,14 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-4-3" class="outline-3">
-<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Настройки внешнего вида чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="theme">theme</span></span></h3>
+<h3 id="sec-4-3">Настройки внешнего вида чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="theme">theme</span></span></h3>
 <div class="outline-text-3" id="text-4-3">
 
 
 </div>
 
 <div id="outline-container-4-3-1" class="outline-4">
-<h4 id="sec-4-3-1"><span class="section-number-4">4.3.1</span> Формат ростера &nbsp;&nbsp;&nbsp;<span class="tag"><span class="roster">roster</span></span></h4>
+<h4 id="sec-4-3-1">Формат ростера &nbsp;&nbsp;&nbsp;<span class="tag"><span class="roster">roster</span></span></h4>
 <div class="outline-text-4" id="text-4-3-1">
 
 
@@ -606,7 +711,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-4-3-2" class="outline-4">
-<h4 id="sec-4-3-2"><span class="section-number-4">4.3.2</span> Формат строчек чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chat">chat</span></span></h4>
+<h4 id="sec-4-3-2">Формат строчек чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chat">chat</span></span></h4>
 <div class="outline-text-4" id="text-4-3-2">
 
 
@@ -632,7 +737,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-4-3-3" class="outline-4">
-<h4 id="sec-4-3-3"><span class="section-number-4">4.3.3</span> Цвета &nbsp;&nbsp;&nbsp;<span class="tag"><span class="colors">colors</span></span></h4>
+<h4 id="sec-4-3-3">Цвета &nbsp;&nbsp;&nbsp;<span class="tag"><span class="colors">colors</span></span></h4>
 <div class="outline-text-4" id="text-4-3-3">
 
 
@@ -660,7 +765,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-4-4" class="outline-3">
-<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Хуки на jabber-mode &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hooks">hooks</span>&nbsp;<span class="hotkeys">hotkeys</span></span></h3>
+<h3 id="sec-4-4">Хуки на jabber-mode &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hooks">hooks</span>&nbsp;<span class="hotkeys">hotkeys</span></span></h3>
 <div class="outline-text-3" id="text-4-4">
 
 
@@ -676,7 +781,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 
 
-<pre class="src src-emacs_lisp">(add-hook 'jabber-chat-mode-hook 'typopunct-mode)
+<pre class="src src-emacs-lisp">(add-hook 'jabber-chat-mode-hook 'typopunct-mode)
 (add-hook 'jabber-chat-mode-hook 'goto-address)
 </pre>
 
@@ -688,7 +793,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-4-5" class="outline-3">
-<h3 id="sec-4-5"><span class="section-number-3">4.5</span> История &nbsp;&nbsp;&nbsp;<span class="tag"><span class="history">history</span></span></h3>
+<h3 id="sec-4-5">История &nbsp;&nbsp;&nbsp;<span class="tag"><span class="history">history</span></span></h3>
 <div class="outline-text-3" id="text-4-5">
 
 
@@ -739,7 +844,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> LaTeX. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="latex">latex</span></span></h2>
+<h2 id="sec-5">LaTeX. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="latex">latex</span></span></h2>
 <div class="outline-text-2" id="text-5">
 
 <p>Для работы с TeX применяется в первую очередь AuCTeX, а также
@@ -749,7 +854,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-5-1" class="outline-3">
-<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Основные особенности моды. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hooks">hooks</span></span></h3>
+<h3 id="sec-5-1">Основные особенности моды. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hooks">hooks</span></span></h3>
 <div class="outline-text-3" id="text-5-1">
 
 
@@ -788,7 +893,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-5-2" class="outline-3">
-<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Хоткеи. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
+<h3 id="sec-5-2">Хоткеи. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
 <div class="outline-text-3" id="text-5-2">
 
 
@@ -810,7 +915,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 </div>
 
 <div id="outline-container-5-3" class="outline-3">
-<h3 id="sec-5-3"><span class="section-number-3">5.3</span> SyncTeX и обратный поиск. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="synctex">synctex</span>&nbsp;<span class="dbus">dbus</span>&nbsp;<span class="evince">evince</span></span></h3>
+<h3 id="sec-5-3">SyncTeX и обратный поиск. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="synctex">synctex</span>&nbsp;<span class="dbus">dbus</span>&nbsp;<span class="evince">evince</span></span></h3>
 <div class="outline-text-3" id="text-5-3">
 
 
@@ -866,7 +971,7 @@ evince.
 </div>
 
 <div id="outline-container-5-4" class="outline-3">
-<h3 id="sec-5-4"><span class="section-number-3">5.4</span> Автовставка скобок. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="cdlatex">cdlatex</span>&nbsp;<span class="autopair">autopair</span></span></h3>
+<h3 id="sec-5-4">Автовставка скобок. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="cdlatex">cdlatex</span>&nbsp;<span class="autopair">autopair</span></span></h3>
 <div class="outline-text-3" id="text-5-4">
 
 
@@ -897,14 +1002,14 @@ evince.
 </div>
 
 <div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> Org-mode. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="org">org</span></span></h2>
+<h2 id="sec-6">Org-mode. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="org">org</span></span></h2>
 <div class="outline-text-2" id="text-6">
 
 
 </div>
 
 <div id="outline-container-6-1" class="outline-3">
-<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Общие параметры. </h3>
+<h3 id="sec-6-1">Общие параметры. </h3>
 <div class="outline-text-3" id="text-6-1">
 
 
@@ -943,7 +1048,7 @@ evince.
 </div>
 
 <div id="outline-container-6-2" class="outline-3">
-<h3 id="sec-6-2"><span class="section-number-3">6.2</span> Дополнительные библиотеки. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="babel">babel</span></span></h3>
+<h3 id="sec-6-2">Дополнительные библиотеки. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="babel">babel</span></span></h3>
 <div class="outline-text-3" id="text-6-2">
 
 
@@ -968,7 +1073,7 @@ evince.
 </div>
 
 <div id="outline-container-6-3" class="outline-3">
-<h3 id="sec-6-3"><span class="section-number-3">6.3</span> Хоткеи. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
+<h3 id="sec-6-3">Хоткеи. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
 <div class="outline-text-3" id="text-6-3">
 
 
@@ -987,14 +1092,14 @@ evince.
 </div>
 
 <div id="outline-container-6-4" class="outline-3">
-<h3 id="sec-6-4"><span class="section-number-3">6.4</span> Функции. </h3>
+<h3 id="sec-6-4">Функции. </h3>
 <div class="outline-text-3" id="text-6-4">
 
 
 </div>
 
 <div id="outline-container-6-4-1" class="outline-4">
-<h4 id="sec-6-4-1"><span class="section-number-4">6.4.1</span> Набор функций для org-capture. </h4>
+<h4 id="sec-6-4-1">Набор функций для org-capture. </h4>
 <div class="outline-text-4" id="text-6-4-1">
 
 
@@ -1039,7 +1144,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-6-4-2" class="outline-4">
-<h4 id="sec-6-4-2"><span class="section-number-4">6.4.2</span> Выведение плана недели в область извещений. </h4>
+<h4 id="sec-6-4-2">Выведение плана недели в область извещений. </h4>
 <div class="outline-text-4" id="text-6-4-2">
 
 
@@ -1068,7 +1173,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-6-4-3" class="outline-4">
-<h4 id="sec-6-4-3"><span class="section-number-4">6.4.3</span> <span class="todo TODO"> TODO</span> Публикация. </h4>
+<h4 id="sec-6-4-3"><span class="todo TODO"> TODO</span> Публикация. </h4>
 <div class="outline-text-4" id="text-6-4-3">
 
 
@@ -1098,7 +1203,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-6-4-4" class="outline-4">
-<h4 id="sec-6-4-4"><span class="section-number-4">6.4.4</span> Всплывающие сообщения. </h4>
+<h4 id="sec-6-4-4">Всплывающие сообщения. </h4>
 <div class="outline-text-4" id="text-6-4-4">
 
 
@@ -1132,7 +1237,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-6-5" class="outline-3">
-<h3 id="sec-6-5"><span class="section-number-3">6.5</span> Calendar. </h3>
+<h3 id="sec-6-5">Calendar. </h3>
 <div class="outline-text-3" id="text-6-5">
 
 
@@ -1167,7 +1272,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> Git. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="git">git</span></span></h2>
+<h2 id="sec-7">Git. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="git">git</span></span></h2>
 <div class="outline-text-2" id="text-7">
 
 <p>Для работы с <code>git</code> внутри емакса используется <code>magit</code>. 
@@ -1186,14 +1291,14 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-8" class="outline-2">
-<h2 id="sec-8"><span class="section-number-2">8</span> Внешний вид редактора. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="look">look</span></span></h2>
+<h2 id="sec-8">Внешний вид редактора. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="look">look</span></span></h2>
 <div class="outline-text-2" id="text-8">
 
 
 </div>
 
 <div id="outline-container-8-1" class="outline-3">
-<h3 id="sec-8-1"><span class="section-number-3">8.1</span> Тулбар и меню. </h3>
+<h3 id="sec-8-1">Тулбар и меню. </h3>
 <div class="outline-text-3" id="text-8-1">
 
 
@@ -1229,7 +1334,7 @@ XBindkeys выполняет эту функцию по нажатию клав�
 </div>
 
 <div id="outline-container-8-2" class="outline-3">
-<h3 id="sec-8-2"><span class="section-number-3">8.2</span> Cкроллинг. </h3>
+<h3 id="sec-8-2">Cкроллинг. </h3>
 <div class="outline-text-3" id="text-8-2">
 
 
@@ -1250,7 +1355,7 @@ scroll-down-aggressively 0.01)
 </div>
 
 <div id="outline-container-8-3" class="outline-3">
-<h3 id="sec-8-3"><span class="section-number-3">8.3</span> Настройка темы. </h3>
+<h3 id="sec-8-3">Настройка темы. </h3>
 <div class="outline-text-3" id="text-8-3">
 
 
@@ -1276,7 +1381,7 @@ scroll-down-aggressively 0.01)
 </div>
 
 <div id="outline-container-8-4" class="outline-3">
-<h3 id="sec-8-4"><span class="section-number-3">8.4</span> Modeline. </h3>
+<h3 id="sec-8-4">Modeline. </h3>
 <div class="outline-text-3" id="text-8-4">
 
 
@@ -1307,7 +1412,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-8-5" class="outline-3">
-<h3 id="sec-8-5"><span class="section-number-3">8.5</span> Не спамить минибуфер. </h3>
+<h3 id="sec-8-5">Не спамить минибуфер. </h3>
 <div class="outline-text-3" id="text-8-5">
 
 
@@ -1326,14 +1431,14 @@ global-mode-string
 </div>
 
 <div id="outline-container-9" class="outline-2">
-<h2 id="sec-9"><span class="section-number-2">9</span> Работа с буферами и окнами. </h2>
+<h2 id="sec-9">Работа с буферами и окнами. </h2>
 <div class="outline-text-2" id="text-9">
 
 
 </div>
 
 <div id="outline-container-9-1" class="outline-3">
-<h3 id="sec-9-1"><span class="section-number-3">9.1</span> Перемещение по окнам. </h3>
+<h3 id="sec-9-1">Перемещение по окнам. </h3>
 <div class="outline-text-3" id="text-9-1">
 
 
@@ -1367,7 +1472,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-9-2" class="outline-3">
-<h3 id="sec-9-2"><span class="section-number-3">9.2</span> Переключение между буферами. </h3>
+<h3 id="sec-9-2">Переключение между буферами. </h3>
 <div class="outline-text-3" id="text-9-2">
 
 
@@ -1388,7 +1493,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-9-3" class="outline-3">
-<h3 id="sec-9-3"><span class="section-number-3">9.3</span> Закрытие буфера: <code>F12</code>. </h3>
+<h3 id="sec-9-3">Закрытие буфера: <code>F12</code>. </h3>
 <div class="outline-text-3" id="text-9-3">
 
 
@@ -1406,7 +1511,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-9-4" class="outline-3">
-<h3 id="sec-9-4"><span class="section-number-3">9.4</span> Ibuffer. </h3>
+<h3 id="sec-9-4">Ibuffer. </h3>
 <div class="outline-text-3" id="text-9-4">
 
 
@@ -1477,14 +1582,14 @@ global-mode-string
 </div>
 
 <div id="outline-container-10" class="outline-2">
-<h2 id="sec-10"><span class="section-number-2">10</span> Хоткеи из общей моды. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h2>
+<h2 id="sec-10">Хоткеи из общей моды. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h2>
 <div class="outline-text-2" id="text-10">
 
 
 </div>
 
 <div id="outline-container-10-1" class="outline-3">
-<h3 id="sec-10-1"><span class="section-number-3">10.1</span> Закладки. </h3>
+<h3 id="sec-10-1">Закладки. </h3>
 <div class="outline-text-3" id="text-10-1">
 
 
@@ -1507,7 +1612,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-10-2" class="outline-3">
-<h3 id="sec-10-2"><span class="section-number-3">10.2</span> Выход и закрытие емакса. </h3>
+<h3 id="sec-10-2">Выход и закрытие емакса. </h3>
 <div class="outline-text-3" id="text-10-2">
 
 
@@ -1533,7 +1638,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-10-3" class="outline-3">
-<h3 id="sec-10-3"><span class="section-number-3">10.3</span> Saveplace. </h3>
+<h3 id="sec-10-3">Saveplace. </h3>
 <div class="outline-text-3" id="text-10-3">
 
 
@@ -1557,7 +1662,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-11" class="outline-2">
-<h2 id="sec-11"><span class="section-number-2">11</span> Емакс и Хром. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chrome">chrome</span></span></h2>
+<h2 id="sec-11">Емакс и Хром. &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chrome">chrome</span></span></h2>
 <div class="outline-text-2" id="text-11">
 
 <p>Для написания текстов в текстовые формы в Хроме вызывается емакс (по
@@ -1601,14 +1706,14 @@ global-mode-string
 </div>
 
 <div id="outline-container-12" class="outline-2">
-<h2 id="sec-12"><span class="section-number-2">12</span> Mail-mode и post-mode. </h2>
+<h2 id="sec-12">Mail-mode и post-mode. </h2>
 <div class="outline-text-2" id="text-12">
 
 
 </div>
 
 <div id="outline-container-12-1" class="outline-3">
-<h3 id="sec-12-1"><span class="section-number-3">12.1</span> Mail-mode. </h3>
+<h3 id="sec-12-1">Mail-mode. </h3>
 <div class="outline-text-3" id="text-12-1">
 
 
@@ -1658,7 +1763,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-13" class="outline-2">
-<h2 id="sec-13"><span class="section-number-2">13</span> Web. </h2>
+<h2 id="sec-13">Web. </h2>
 <div class="outline-text-2" id="text-13">
 
 
@@ -1679,14 +1784,14 @@ global-mode-string
 </div>
 
 <div id="outline-container-14" class="outline-2">
-<h2 id="sec-14"><span class="section-number-2">14</span> Почта. </h2>
+<h2 id="sec-14">Почта. </h2>
 <div class="outline-text-2" id="text-14">
 
 
 </div>
 
 <div id="outline-container-14-1" class="outline-3">
-<h3 id="sec-14-1"><span class="section-number-3">14.1</span> Общее описание процесса. </h3>
+<h3 id="sec-14-1">Общее описание процесса. </h3>
 <div class="outline-text-3" id="text-14-1">
 
 <ol>
@@ -1750,7 +1855,7 @@ global-mode-string
 </div>
 
 <div id="outline-container-14-2" class="outline-3">
-<h3 id="sec-14-2"><span class="section-number-3">14.2</span> Новый тип ссылок: <code>mutt:</code>. </h3>
+<h3 id="sec-14-2">Новый тип ссылок: <code>mutt:</code>. </h3>
 <div class="outline-text-3" id="text-14-2">
 
 
@@ -1800,7 +1905,7 @@ global-mode-string
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2011-08-29 17:31:22 CEST</p>
+<p class="date">Date: 2011-08-29 19:50:14 CEST</p>
 <p class="author">Author: Igor Shenderovich</p>
 <p class="email"><a href="mailto:shender.i AT gmail.com">shender.i AT gmail.com</a></p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
