@@ -267,6 +267,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 (global-set-key (kbd "<C-XF86Back>")
 		(lambda ()
 		  (interactive)
+            (jabber-disconnect)
 		  (call-process-shell-command "/home/igor/.scripts/jabber_disconnect.sh" nil 0)
 		  )
 		)
