@@ -1,8 +1,7 @@
 #+TITLE: Emacs Starter Kit
 #+AUTHOR: Igor Shenderovich
 #+EMAIL: shender.i AT gmail.com
-#+OPTIONS:   author:t creator:t timestamp:t email:t
-#+OPTIONS: toc:nil
+#+OPTIONS:  author:t creator:t timestamp:t email:t toc:t num:nil
 
 * Загрузка основных пакетов. :load:
 
@@ -318,7 +317,7 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 - Переход по ссылке на комбинации =C-c RET=.
 
-#+begin_src emacs_lisp
+#+begin_src emacs-lisp
 (add-hook 'jabber-chat-mode-hook 'typopunct-mode)
 (add-hook 'jabber-chat-mode-hook 'goto-address)
 #+end_src
