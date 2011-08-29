@@ -1,0 +1,928 @@
+#+TITLE: Emacs Starter Kit
+#+AUTHOR: Igor Shenderovich
+#+EMAIL: shender.i AT gmail.com
+#+OPTIONS:   author:t creator:t timestamp:t email:t
+#+OPTIONS: toc:nil
+
+* Загрузка основных пакетов. :load:
+
+Типографика ([[http://www.emacswiki.org/emacs/TypographicalPunctuationMarks][typopunct]]), облегчённая работа с TeX ([[http://www.gnu.org/software/auctex/][AuCTeX]], [[http://staff.science.uva.nl/~dominik/Tools/cdlatex/][CDLaTeX]]),
+красивое цитирование в текстах (boxquote).
+
+#+begin_src emacs-lisp
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
+
+(require 'typopunct)
+(require 'cdlatex)
+(require 'boxquote)
+(require 'autopair)
+#+end_src
+
+* Редактирование текста. :edit:
+** Русский язык.
+
+Раскладка переключается по =CapsLock= (записан как =F13=, в файле [[file:~/.xinitrc][xinitrc]]
+записан редирект с =CapsLock= на =F13=).
+
+При переключении раскладки меняются правила для =typopunct=, в
+частности, тип кавычек (здесь он упоминается как =francais= — это
+обыкновенные кавычки–«ёлочки»).
+
+#+begin_src emacs-lisp
+(set-input-method 'russian-computer)
+
+(global-set-key [f13] 'toggle-input-method)
+
+(add-hook 'input-method-activate-hook (lambda ()
+					(typopunct-change-language
+					 'francais t)))
+(add-hook 'input-method-inactivate-hook (lambda ()
+					  (typopunct-change-language
+					   'english t)))
+#+end_src
+
+** Настройка copy-paste
+
+#+begin_src emacs-lisp
+(transient-mark-mode 1)
+(setq mark-even-if-inactive t)
+(setq x-select-enable-clipboard t        
+  interprogram-paste-function            
+  'x-cut-buffer-or-selection-value)      
+
+(when (fboundp file-name-shadow-mode)    
+  (file-name-shadow-mode t))             
+#+end_src
+
+Копирование строчек без выделения. 
+
+#+begin_src emacs-lisp
+(defadvice kill-ring-save (before slick-copy activate compile) "When called
+  interactively with no active region, copy a single line instead."
+  (interactive (if mark-active (list (region-beginning) (region-end)) (message
+  "Copied line") (list (line-beginning-position) (line-beginning-position
+  2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+    (if mark-active (list (region-beginning) (region-end))
+      (list (line-beginning-position)
+        (line-beginning-position 2)))))
+#+end_src
+
+** ispell.
+
+Проверка орфографии на лету. 
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-<f7>") 
+  (lambda()(interactive)
+    (ispell-change-dictionary "ru-yeyo")
+    (flyspell-buffer)
+    (flyspell-mode t)))
+#+end_src
+
+** Поиск и замена.
+
+Основные хоткеи и типовые настройки. 
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+(when (require 'browse-kill-ring nil 'noerror)
+  (browse-kill-ring-default-keybindings))
+
+(global-set-key (kbd "M-n") 'next-error)
+(global-set-key (kbd "M-p") 'previous-error)
+
+(add-hook 'isearch-mode-end-hook
+          (lambda ()
+            (when isearch-forward (goto-char isearch-other-end))))
+
+(autoload 'kill-ring-search "kill-ring-search"
+  "Search the kill ring in the minibuffer."
+  (interactive))
+#+end_src
+
+** Редактирование при помощи =sudo=. 
+
+Функция =sudo-edit=: открытие файла с правами =root=. Работает через
+=tramp=. Может работать удалённо. 
+
+#+begin_src emacs-lisp
+(defun sudo-edit (&optional arg)
+  (interactive "p")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+#+end_src
+
+** Выделение текста. 
+
+Среди прочего используется =cua-mode= для выделения прямоугольниками.
+
+#+begin_src emacs-lisp
+(require 'cua-base)
+(setq cua-enable-cua-keys nil)         
+(cua-mode t)      
+#+end_src
+
+** Цитирование и комментирование. 
+
+Для цитирования используется =boxquote=, подгруженное в первом
+разделе. Определим для неё хоткеи.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-;") 'boxquote-region)
+(global-set-key (kbd "C-'") 'boxquote-unbox)
+#+end_src
+
+Комментирование и раскомментирование: =C-l=. 
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-l") 'comment-or-uncomment-region)
+#+end_src
+
+** Всякое по мелочи. 
+
+#+begin_src emacs-lisp
+(setq default-major-mode 'text-mode)
+
+(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "M-g") 'goto-line)
+
+(global-set-key "\C-w" 'backward-kill-word)
+
+(global-set-key [(shift insert)] 'yank)
+(global-set-key [(shift delete)] 'kill-region)
+
+(global-set-key [(control k)] 'kill-line)
+
+
+#+end_src
+** Типографика: окавычивание выделенного слова. :typo:
+
+#+begin_src emacs-lisp
+(defadvice typopunct-insert-quotation-mark (around wrap-region activate)
+  (let* ((lang (or (get-text-property (point) 'typopunct-language)
+		   typopunct-buffer-language))
+	 (omark (if single
+		    (typopunct-opening-single-quotation-mark lang)
+		  (typopunct-opening-quotation-mark lang)))
+	 (qmark (if single
+		    (typopunct-closing-single-quotation-mark lang)
+		  (typopunct-closing-quotation-mark lang))))
+    (cond
+     (mark-active
+      (let ((skeleton-end-newline nil)
+	    (singleo (typopunct-opening-single-quotation-mark lang))
+	    (singleq (typopunct-closing-single-quotation-mark lang)))
+	(if (> (point) (mark))
+	    (exchange-point-and-mark))
+	(save-excursion
+	  (while (re-search-forward (regexp-quote (string omark)) (mark) t)
+	    (replace-match (regexp-quote (string singleo)) nil nil)))
+	(save-excursion
+	  (while (re-search-forward (regexp-quote (string qmark)) (mark) t)
+	    (replace-match (regexp-quote (string singleq)) nil nil)))
+	(skeleton-insert (list nil omark '_ qmark) -1)))
+     ((looking-at (regexp-opt (list (string omark) (string qmark))))
+      (forward-char 1))
+     (t ad-do-it))))
+#+end_src
+
+* Файл с паролями. :secrets:
+Для всех паролей от учётных записей и т.д. создан специальный [[file:secrets.el.gpg][файл]]
+(защищённый GPG). К сожалению, функция =require= не понимает
+запароленных файлов, поэтому нужно сделать ещё [[file:secrets.el][библиотеку]],
+единственная функция которой — открывать шифрованный файл с паролями. 
+
+Сначала подключим EasyPG. 
+
+#+begin_src emacs-lisp
+(require 'epa)
+#+end_src
+
+Здесь определяется функция, которая подгружает файл с паролями. При
+этом спрашивается passphrase — это происходит только в первый раз. 
+
+#+begin_src emacs-lisp
+(defun start-secrets ()
+  (interactive)
+  (load-library "secrets.el.gpg")
+)
+#+end_src
+
+* Jabber. :jabber:
+Логины и пароли от аккаунтов спрятаны в зашифрованном файле. 
+
+** Настройки соединения :connection:
+
+Сначала подгрузим джаббер. Также скажем ему автоматически
+переподключаться при разрыве соединения, а также использовать
+правильную ssl–программу. 
+
+#+begin_src emacs-lisp
+(require 'jabber)           
+
+(setq jabber-auto-reconnect t)
+(setq jabber-connection-ssl-program (quote gnutls))
+#+end_src
+
+** Хоткеи :hotkeys:
+*** Операции внутри буфера
+
+Переключение на новое сообщение: =C-x C-a=. 
+
+Переключение к ростеру: =C-F12=.
+
+#+begin_src emacs-lisp
+(global-set-key "\C-x\C-a" 'jabber-activity-switch-to)
+(global-set-key [(control f12)] 'jabber-switch-to-roster-buffer)
+#+end_src
+
+*** Подключение и отключение
+
+Используется внешний скрипт, так как нужно пробрасывать
+ssh–туннель. Кроме того, в скрипте работают оповещения о
+подключении/отключении.  
+
+Подключение: =C-XF86Forward= ([[file:~/.scripts/jabber_connect.sh][скрипт]]). 
+Отключение: =C-XF86Back= ([[file:~/.scripts/jabber_disconnect.sh][скрипт]]). 
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<C-XF86Forward>")
+		(lambda ()
+		  (interactive)
+            (start-secrets)
+		  (call-process-shell-command "/home/igor/.scripts/jabber_connect.sh" nil 0)
+		  )
+		)
+
+(global-set-key (kbd "<C-XF86Back>")
+		(lambda ()
+		  (interactive)
+		  (call-process-shell-command "/home/igor/.scripts/jabber_disconnect.sh" nil 0)
+		  )
+		)
+#+end_src
+
+** Настройки внешнего вида чата :theme:
+*** Формат ростера :roster:
+
+#+begin_src emacs-lisp
+(jabber-roster-toggle-binding-display)
+(jabber-roster-toggle-offline-display)
+(setq jabber-roster-line-format "%c %-35n %u %-8s  %S")
+(setq jabber-roster-show-title nil)
+#+end_src
+
+*** Формат строчек чата :chat:
+
+#+begin_src emacs-lisp
+(setq jabber-chat-buffer-show-avatar nil)
+(setq jabber-chat-delayed-time-format "%Y-%m-%d %H:%M:%S")
+(setq jabber-chat-fill-long-lines t)
+(setq jabber-chat-local-prompt-format "[%t] Igor Shenderovich> ")
+(setq jabber-chat-time-format "%Y-%m-%d %H:%M:%S")
+
+(setq jabber-rare-time-format "%a %e %b %Y %H:%M")
+
+(setq jabber-display-menu t)
+#+end_src
+
+*** Цвета :colors:
+
+#+begin_src emacs-lisp
+(custom-set-faces
+ '(jabber-chat-prompt-foreign ((t (:foreground "red"))))
+ '(jabber-chat-prompt-local ((t (:foreground "#4682b4" :weight thin))))
+ '(jabber-chat-prompt-system ((t (:foreground "red" :weight light))))
+ '(jabber-chat-text-local ((t nil)))
+ '(jabber-roster-user-away ((t (:foreground "#6b8e23" :slant italic :weight normal))))
+ '(jabber-roster-user-online ((t (:foreground "black" :slant normal :weight bold))))
+ '(jabber-title-large ((t (:inherit variable-pitch :weight bold :height 1.5 :width ultra-expanded))))
+ '(jabber-title-medium ((t (:foreground "#a52a2a" :height 1.2 :width normal))))
+ '(jabber-title-small ((t (:foreground "#b8860b" :weight bold :height 0.8 :width semi-expanded)))))
+#+end_src
+
+** Хуки на jabber-mode :hooks:hotkeys:
+
+- Включение =typopunct= для типографики.
+
+- Переход по ссылке на комбинации =C-c RET=.
+
+#+begin_src emacs_lisp
+(add-hook 'jabber-chat-mode-hook 'typopunct-mode)
+(add-hook 'jabber-chat-mode-hook 'goto-address)
+#+end_src
+
+** История :history:
+
+История хранится в этой [[file:~/.emacs.d/jabber/][папке]], по файлу на каждого адресата.
+
+#+begin_src emacs-lisp
+(setq jabber-global-history-filename "~/.emacs.d/jabber_global_message_log")
+(setq jabber-history-dir "~/.emacs.d/jabber")
+(setq jabber-history-enabled t)
+(setq jabber-use-global-history nil)
+#+end_src
+
+Файл с историей открывается с помощью функции =jabber-visit-history=. 
+
+#+begin_src emacs-lisp
+(defun jabber-visit-history (jid)
+  "Visit jabber history with JID in a new buffer.
+
+Performs well only for small files.  Expect to wait a few seconds
+for large histories.  Adapted from `jabber-chat-create-buffer'."
+  (interactive (list (jabber-read-jid-completing "JID: ")))
+  (let ((buffer (generate-new-buffer (format "*-jabber-history-%s-*"
+                                             (jabber-jid-displayname jid)))))
+    (switch-to-buffer buffer)
+    (make-local-variable 'jabber-chat-ewoc)
+    (setq jabber-chat-ewoc (ewoc-create #'jabber-chat-pp))
+    (mapc 'jabber-chat-insert-backlog-entry
+          (nreverse (jabber-history-query nil nil t t "."
+                                          (jabber-history-filename jid))))
+    (view-mode)))
+#+end_src
+
+* LaTeX. :latex:
+Для работы с TeX применяется в первую очередь AuCTeX, а также
+несколько минорных мод. 
+
+** Основные особенности моды. :hooks:
+
+Несколько хуков на теховскую моду: автозаполнение, =RefTeX= для
+удобной вставки ссылок, а также очень удобный =CDLaTeX=. 
+
+#+begin_src emacs-lisp
+(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook 'cdlatex-mode)
+#+end_src
+
+В качестве основной команды компиляции — =Synctex= (см. следующий
+раздел).
+
+#+begin_src emacs-lisp
+(setq reftex-label-alist '((nil ?e nil "~\\eqref{%s}" nil nil)))
+(setq TeX-save-query nil)
+(setq TeX-command-force "Synctex")
+#+end_src
+
+** Хоткеи. :hotkeys:
+
+Вставка внутренних ссылок: на уравнения, разделы, картинки,
+библиографию и т.д.: =C-]=. Работает с помощью =RefTeX=.
+
+#+begin_src emacs-lisp
+(global-set-key "\C-]" 'reftex-reference)
+#+end_src
+
+** SyncTeX и обратный поиск. :synctex:dbus:evince:
+
+В качестве дефолтной теховской команды используется специальный
+[[file:~/.scripts/synctex-emacs.sh][скрипт]], вызывающий synctex для синхронизации исходника *.tex и
+получающегося *.pdf. В результате работает обратный поиск по *.pdf в
+evince. 
+
+#+begin_src emacs-lisp
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list 
+		'("Synctex" "/home/igor/.scripts/synctex-emacs.sh %t %b %n" TeX-run-TeX nil t) t)) 
+#+end_src
+
+Обратный поиск работает так: по клику в evince на участке текста идёт
+сигнал в dbus (для этого нужен evince >=2.32). В емаксе есть
+встроенная библиотека для взаимодействия с dbus. Для того, чтобы она
+работала в случае синхронизации pdf с tex, есть следующий код (взят из
+[[http://thread.gmane.org/gmane.emacs.auctex.general/4074/][этой]] ветки): 
+
+#+begin_src emacs-lisp
+(require 'dbus)
+
+(defun th-evince-sync (file linecol)
+  (let ((buf (get-buffer file))
+        (line (car linecol))
+        (col (cadr linecol)))
+    (if (null buf)
+        (message "Sorry, %s is not opened..." file)
+      (switch-to-buffer buf)
+      (goto-line (car linecol))
+      (unless (= col -1)
+        (move-to-column col)))))
+
+(dbus-register-signal
+ :session nil "/org/gnome/evince/Window/0" "org.gnome.evince.Window" "SyncSource" 'th-evince-sync)
+#+end_src
+
+** Автовставка скобок. :cdlatex:autopair:
+
+Для автоматической вставки парных скобок вида =(), {}, []=
+используется =autopair-mode=. Эта мода может также использоваться в
+обычном текстовом режиме. Есть только одно «но»: в =CDLaTeX= также
+используется автовставка (правда, менее удобная) и они
+конфликтуют. Решить этот вопрос можно так: отключить в =CDLaTeX= всю
+автовставку, кроме =$$=. 
+
+#+begin_src emacs-lisp
+(setq cdlatex-paired-parens "$")
+#+end_src
+
+Кстати, теперь, с удалением одной скобки автоматически удаляется и
+вторая (при условии, что между ними ничего нет).
+
+* Org-mode. :org:
+** Общие параметры.
+
+#+begin_src emacs-lisp
+(setq org-directory "~/dc/org/")
+(setq org-return-follows-link t)
+(setq org-completion-use-ido t)
+(setq org-use-property-inheritance t)
+(setq org-agenda-include-diary nil)
+(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+#+end_src
+
+Несколько хуков на org-mode.
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+(add-hook 'org-mode-hook 'autopair-mode)
+(add-hook 'org-mode-hook 'typopunct-mode)
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
+
+** Дополнительные библиотеки. :babel:
+
+Поддержка исходного кода в sh.
+
+# #+begin_src emacs-lisp
+# (require 'org-babel-sh)
+# #+end_src
+
+Поддержка =org-protocol=. Нужно для взаимодействия с Хромом. 
+
+#+begin_src emacs-lisp
+(require 'org-protocol)
+#+end_src
+
+** Хоткеи. :hotkeys:
+
+#+begin_src emacs-lisp
+(global-set-key "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+#+end_src
+
+** Функции.
+*** Набор функций для org-capture.
+
+При внешнем вызове org-capture создаётся отдельное окно размером 80x20
+по центру экрана. При завершении capture окно закрывается.
+
+XBindkeys выполняет эту функцию по нажатию клавиши =ScrollLock=.
+
+#+begin_src emacs-lisp
+(defadvice org-capture-finalize (after delete-remember-frame activate)
+  "Advise org-capture-finalize to close the frame if it is the remember frame"
+  (if (equal "_CAPTURE_" (frame-parameter nil 'name))
+    (delete-frame))
+)
+(add-hook 'org-capture-mode-hook
+          'delete-other-windows)
+
+(defun make-remember-frame ()
+  "Create a new frame and run org-capture"
+  (interactive)  
+  (make-frame '((name . "_CAPTURE_") (width . 80) (height . 20)))
+  (select-frame-by-name "_CAPTURE_")
+  (modify-frame-parameters nil
+  			   '(
+  			     (vertical-scroll-bars . nil)
+  			     (menu-bar-lines . nil)
+  			     (tool-bar-lines . nil)))
+  (org-capture)
+  (when (fboundp 'x-focus-frame) (x-focus-frame nil)) ;; X only....
+)
+#+end_src
+
+*** Выведение плана недели в область извещений. 
+
+Функция, срабатывающая при вызове агенды снаружи емакса. Файл агенды
+экспортируется во внешний [[file:/tmp/org-agenda.txt][файл]], который потом средствами Awesome
+показывается как нотификация.
+
+#+begin_src emacs-lisp
+(defun th-org-update-agenda-file (&optional force)
+  (interactive)
+  (save-excursion
+    (save-window-excursion
+      (let ((file "/tmp/org-agenda.txt"))
+        (org-agenda-list)
+        (org-write-agenda file)))))
+#+end_src
+
+*** TODO Публикация. 
+
+Публикация файлов *.org в простой html, без заголовков и титулов. 
+
+#+begin_src emacs-lisp
+(defun is/publish (file &optional with-header-footer)
+  (interactive "fFile:\nP")
+  (save-excursion
+    (let ((exist (get-file-buffer file)) (b (find-file-noselect file)))
+      (set-buffer b)
+      (org-export-as-html 0 t nil nil (not with-header-footer))
+      (when (not exist)
+        (kill-buffer-if-not-modified b)
+	)))
+  )
+#+end_src
+
+*** Всплывающие сообщения.
+
+Данная функция написана для вспылывающих сообщений, появляющихся при событиях
+календаря. Вызывается [[file:~/.scripts/popup.sh][скрипт]], показывающий в аскетичном виде входящую
+в него строчку. 
+
+#+begin_src emacs-lisp
+(defun is/popup (title msg &optional icon)
+  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
+of the message, MSG is the context. Optionally, you can provide an ICON and
+a sound to be played"
+  (interactive)
+  (if (eq window-system 'x)
+      (shell-command (concat "/home/igor/.scripts/popup.sh -t " "'" title "' -m " "'" msg "' -i " (if icon (concat " " icon)) " -p top_right"))
+    ;; text only version
+    (message (concat title ": " msg))
+    )
+  )
+#+end_src
+
+** Calendar.
+
+Сначала о встроенном емаксовском календаре. 
+
+#+begin_src emacs-lisp
+(setq 
+  diary-file  "~/.emacs.d/diary"    ;        ; keep my ~/ clean
+  holidays-in-diary-buffer          nil            
+  mark-holidays-in-calendar         t
+  all-christian-calendar-holidays   nil      ;; show christian 
+  all-islamic-calendar-holidays     nil      ;; don't show islamic
+  all-hebrew-calendar-holidays      nil      ;; don't show hebrew
+  display-time-24hr-format          t        ;; use 24h format
+  display-time-day-and-date         nil      ;; don't display time
+  display-time-format               nil      ;;
+  display-time-use-mail-icon        nil      ;; don't show mail icon
+  calendar-latitude                 48.5     ;; my...
+  calendar-longitude                2.21     ;; ...position
+  calendar-location-name "Paris")
+#+end_src
+
+* Git. :git:
+Для работы с =git= внутри емакса используется =magit=. 
+
+#+begin_src emacs-lisp
+(global-set-key "\C-c\C-g" 'magit-status)
+#+end_src
+
+* Внешний вид редактора. :look:
+** Тулбар и меню.
+
+По умолчанию спрятаны. 
+
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+#+end_src
+
+Отключим также мигающий курсор. 
+
+#+begin_src emacs-lisp
+(blink-cursor-mode -1)
+#+end_src
+
+** Cкроллинг.
+
+#+begin_src emacs-lisp
+  (setq scroll-margin 1                  
+  scroll-conservatively 100000           
+  scroll-up-aggressively 0.01            
+  scroll-down-aggressively 0.01)         
+#+end_src
+
+** Настройка темы.
+
+Чёрные буквы на белом фоне. 
+
+#+begin_src emacs-lisp
+(show-paren-mode t)
+(setq show-paren-delay 0)
+(setq show-paren-style 'expression)
+(set-face-background 'show-paren-match-face "honeydew2")
+(set-face-foreground 'show-paren-match-face "black")
+(set-face-attribute 'show-paren-match-face nil :weight 'normal)
+#+end_src
+
+** Modeline.
+
+#+begin_src emacs-lisp
+(setq default-mode-line-format
+'("-"
+mode-line-mule-info
+mode-line-modified
+mode-line-frame-identification
+mode-line-buffer-identification
+"  "
+global-mode-string
+"   %[(" mode-name mode-line-process minor-mode-alist "%n"")%]--"
+(line-number-mode "L%l--")
+(column-number-mode "C%c--")
+(-3 . "%p")
+"-%-")
+)
+#+end_src
+
+** Не спамить минибуфер.
+
+#+begin_src emacs-lisp
+(setq icomplete-prospects-height 2)
+#+end_src
+
+* Работа с буферами и окнами.
+** Перемещение по окнам. 
+
+Для переключения между окнами типа «влево–вправо–вверх–вниз»
+используется клавиша =Win=. Для переключения типа
+«следующее–предыдущее» используются клавиши, расположенные сверху от
+стрелок.
+
+#+begin_src emacs-lisp
+(windmove-default-keybindings 'super)
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-1") 'delete-other-windows)
+(global-set-key (kbd "M-2") 'split-window-vertically)
+(global-set-key (kbd "M-3") 'split-window-horizontally)
+(global-set-key (kbd "M-0") 'delete-window)
+(global-set-key (kbd "<XF86Back>") (lambda() (interactive) (other-window -1)))
+(global-set-key (kbd "<XF86Forward>") (lambda() (interactive)
+(other-window 1)))
+
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+** Переключение между буферами. 
+
+Сделано с помощью =ibuffer=.
+
+#+begin_src emacs-lisp
+(global-set-key "\C-x\C-b" 'ibuffer)
+#+end_src
+
+** Закрытие буфера: =F12=.
+
+#+begin_src emacs-lisp
+(global-set-key [f12] 'kill-this-buffer)
+#+end_src
+
+** Ibuffer.
+
+Уникальные имена для каждого буфера. 
+
+#+begin_src emacs-lisp
+(require 'uniquify)
+
+(setq 
+    uniquify-buffer-name-style 'post-forward
+    uniquify-separator ":"
+    uniquify-after-kill-buffer-p t
+    uniquify-ignore-buffers-re "^\\*")
+#+end_src
+
+Разбрасывание буферов по категориям, в зависимости от используемой в
+каждом из них моды. 
+
+#+begin_src emacs-lisp
+(setq ibuffer-saved-filter-groups
+  (quote (("default"      
+            ("org" ;; all org-related buffers
+              (mode . org-mode))  
+            ("mail"
+              (or  ;; mail-related buffers
+               (mode . message-mode)
+               (mode . mail-mode)
+	       (mode . post-mode)
+               ;; etc.; all your mail related modes
+               ))
+            ("emacs configs"
+              (filename . "~/.emacs.d/"))
+	    ("jabber"
+	     (name . "jabber"))
+	    ("science"
+	     (filename . "~/dc/notes/"))
+            ("programming" ;;
+              (or
+                (mode . c-mode)
+                (mode . perl-mode)
+                (mode . python-mode)
+                (mode . sh-mode)
+                )) 
+	    ))))
+
+(add-hook 'ibuffer-mode-hook
+  (lambda ()
+    (ibuffer-switch-to-saved-filter-groups "default")))
+
+(set-default 'imenu-auto-rescan t)
+#+end_src
+
+* Хоткеи из общей моды. :hotkeys:
+** Закладки.
+
+Установка закладок и переход к ним.
+
+#+begin_src emacs-lisp
+(setq bookmark-default-file "~/.emacs.d/emacs-bookmarks")
+
+(global-set-key [f5] 'bookmark-set)
+(global-set-key [f6] 'bookmark-jump)
+#+end_src
+** Выход и закрытие емакса.
+
+По нажатию =F4= вызывается =save-buffers-kill-emacs=, без
+дополнительных вопросов.
+
+#+begin_src emacs-lisp
+(global-set-key [f4]  'save-buffers-kill-emacs)
+
+(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+  (flet ((process-list ())) ad-do-it))
+#+end_src
+
+** Saveplace.
+
+Пакет для сохранения места работы в файле. 
+
+#+begin_src emacs-lisp
+(require 'saveplace)
+
+(setq-default save-place t)
+(setq save-place-file "~/.emacs.d/places/")
+#+end_src
+* Емакс и Хром. :chrome:
+Для написания текстов в текстовые формы в Хроме вызывается емакс (по
+нажатию =A-RET=). Для этого используется расширение [[https://chrome.google.com/extensions/detail/ljobjlafonikaiipfkggjbhkghgicgoh][Edit with
+Emacs]]. Поскольку Хром не может запускать приложения из себя, емакс
+работает в режиме сервера и следит за обращениями на порт 9292. 
+
+Для этого в папке =~/.emacs.d/plugins= сделана ссылка на
+=edit-server.el=, который идёт в комплекте с расширением. Эта
+библиотека подгружается при запуске и запускается сервер. 
+
+#+begin_src emacs-lisp
+(require 'edit-server)
+(edit-server-start)
+#+end_src
+
+Несколько хуков для облегчения жизни: типографика, автозаполнение и
+=html-mode= для быстрой вставки ссылок и картинок. 
+
+#+begin_src emacs-lisp
+(add-hook 'edit-server-start-hook 'typopunct-mode)
+(add-hook 'edit-server-start-hook 'auto-fill-mode)
+(add-hook 'edit-server-start-hook 'html-mode)
+
+(global-set-key (kbd "C-c h") 'html-href-anchor)
+(global-set-key (kbd "C-c i") 'html-image)
+#+end_src
+* Mail-mode и post-mode.
+** Mail-mode.
+
+Несколько хуков на моду для написания писем.
+
+Включается =orgstruct++-mode= — облегчённая версия =org-mode=. Также
+устанавливается фиксированная ширина абзаца — 72 символа. 
+
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+
+(setq mail-mode-hook
+      (quote (orgstruct++-mode
+              (lambda nil (setq fill-column 72))
+              turn-on-auto-fill)))
+#+end_src
+
+Также заменим =C-c #= на =C-c C-c=. 
+
+#+begin_src emacs-lisp
+
+(add-hook
+   'mail-mode-hook
+   (lambda ()
+     (define-key mail-mode-map [(control c) (control c)]
+       (lambda ()
+         (interactive)
+         (save-buffer)
+         (server-edit)))))
+#+end_src
+
+* Web.
+
+Настройка дефолтного браузера.
+
+#+begin_src emacs-lisp
+(setq browse-url-browser-function (quote browse-url-generic))
+(setq browse-url-generic-program "google-chrome")
+#+end_src
+* Почта. 
+** TODO [1/1] Задачи. :noexport:
+   
+- [X] Сделать так, чтобы в емаксе не открывался лишний буфер =Async
+  Shell Command=.
+
+** Общее описание процесса.
+1. Все письма из аккаунта на gmail выкачиваются на компьютер с помощью
+   =offlineimap=. По крону каждые пять минут запускается скрипт
+   [[file:~/.scripts/mailrun.sh][mailrun.sh]], который запускает =offlineimap=, если он ещё не запущен
+   вдруг. Конфиг cron — [[file:/var/spool/cron/igor][тут]]. 
+
+2. Все письма (вместе с аттачментами) складываются в =maildir= по
+   адресу [[file:~/mail/][/home/igor/mail]] (подпапки отвечают различным фильтрам в
+   gmail).
+
+3. Эту папку читает =mutt=. Его конфиг — [[file:~/.muttrc][здесь]].
+
+4. Также за этой папкой следит =incrond=, который при наличии новых
+   файлов в подпапках new запускает [[file:~/.scripts/mail_blink_on.sh][скрипт–извещение]] (начинает моргать
+   лампочка Z). Конфиг incron — [[file:/var/spool/incron/igor][тут]]. При исчезновении файлов в этих
+   подпапках (их прочитали mutt’ом или в веб-интерфейсе) лампочка
+   перестаёт моргать.
+
+5. Поиск по письмам реализован с помощью [[http://notmuchmail.org/][notmuch]]. Это простая утилита,
+   основанная на =Xapian=, которая позволяет делать очень быстрый
+   поиск как по заголовкам писем (subject, from, date,...) так и по
+   всему тексту письма. В maildir хранится база данных Xapian, и поиск
+   фактически осуществляется по ней. Что приятно — у неё есть
+   специально написанный front-end для емакса, так что искать можно не
+   выходя из него.
+   
+   Чтобы искать в письмах с помощью notmuch, достаточно нажать
+   =F8=. По нажатию вызывается скрипт [[file:~/.scripts/mutt-notmuch][mutt-notmuch]]. Этот скрипт
+   находит все релевантные сообщения, складывает их во временную папку
+   [[file:~/.cache/mutt_results/][.cache/mutt_results]], и открывает эту папку в mutt для чтения. 
+   
+   Также по нажатию =F9= скрипт находит все сообщения из данной ветки
+   и складывает их в ту же временную папку для чтения.
+
+6. У каждого письма есть своё уникальное =id=. Поиск по =id= также
+   осуществляется с помощью =notmuch search id:...=. При этом notmuch
+   возвращает сообщения как путь до соответствующего файла. Это делает
+   возможным введение нового типа ссылок в org-mode — ссылку на
+   конкретное письмо. Ниже будет рассмотрена конкретная реализация.
+
+7. В качестве адресной книги используется [[http://pypi.python.org/pypi/goobook/1.4alpha4#mutt][goobook]], он подкачивает
+   всю информацию о контактах из гугловских контактов и осуществляет
+   по ним поиск. С помощью =goobook= можно пользоваться
+   автодополнением и поиском по контактам прямо в =mutt=. 
+   
+** Новый тип ссылок: =mutt:=. 
+
+Для начала определим, как открывать подобные ссылки. Процесс выглядит
+так: =notmuch= находит сообщение с нужным =id= (выдаёт имя
+соответствующее имя файла), а =mutt= открывает этот файл. Эта
+процедура описана в скрипте [[file:~/.scripts/mutt-open][mutt-open]]. Перед этим необходимо открыть
+терминал (в данном случае =sakura=).
+
+#+begin_src emacs-lisp
+(defun open-mail-in-mutt (message)
+  "Open a mail message in Mutt, using an external terminal.
+
+Message can be specified either by a path pointing inside a
+Maildir, or by Message-ID."
+  (interactive "MPath or Message-ID: ")
+  (call-process-shell-command
+   (format "sakura -r 50 -c 100 --name='mutt-fast' -e \"%s %s\" &"
+       (substitute-in-file-name "$HOME/.scripts/mutt-open") message) nil 0))
+#+end_src
+
+Теперь определить новый тип ссылок совсем просто: 
+
+#+begin_src emacs-lisp
+(org-add-link-type "mutt" 'open-mail-in-mutt)
+#+end_src
+
+Ссылка вида =mutt:= будет открывать из емакса =mutt= с уже открытым
+нужным письмом.
+
