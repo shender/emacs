@@ -1,7 +1,7 @@
-#+TITLE: Emacs Starter Kit
+#+TITLE: Emacs: литературный конфиг.
 #+AUTHOR: Igor Shenderovich
 #+EMAIL: shender.i AT gmail.com
-#+OPTIONS:  author:t creator:t timestamp:t email:t toc:t num:nil
+#+OPTIONS:  author:t creator:t timestamp:t email:t toc:t num:nil H:2
 
 * Загрузка основных пакетов. :load:
 
@@ -16,6 +16,8 @@
 (require 'cdlatex)
 (require 'boxquote)
 (require 'autopair)
+(require 'org-latex)
+(autoload 'magit-status "magit" nil t)
 #+end_src
 
 * Редактирование текста. :edit:
@@ -442,16 +444,20 @@ evince.
 * Org-mode. :org:
 ** Общие параметры.
 
+Стандартные вещи: дефолтные папки, файлы и т.д.
+
 #+begin_src emacs-lisp
 (setq org-directory "~/dc/org/")
+(setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-return-follows-link t)
 (setq org-completion-use-ido t)
 (setq org-use-property-inheritance t)
 (setq org-agenda-include-diary nil)
 (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+(setq org-export-with-LaTeX-fragments t)
 #+end_src
 
-Несколько хуков на org-mode.
+Несколько хуков на org-mode: типографика, автоскобки и т.д.
 
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
@@ -459,6 +465,13 @@ evince.
 (add-hook 'org-mode-hook 'typopunct-mode)
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
+
+Для аттачментов: 
+
+#+begin_src emacs-lisp
+(setq org-attach-directory "/home/igor/dc/org/data"
+      org-attach-method 'mv)
 #+end_src
 
 ** Дополнительные библиотеки. :babel:
@@ -567,7 +580,7 @@ a sound to be played"
   )
 #+end_src
 
-** Calendar.
+** Календарь.
 
 Сначала о встроенном емаксовском календаре. 
 
@@ -586,6 +599,71 @@ a sound to be played"
   calendar-latitude                 48.5     ;; my...
   calendar-longitude                2.21     ;; ...position
   calendar-location-name "Paris")
+#+end_src
+
+** Шаблоны.
+
+По нажатию =C-c= вызываются различные шаблоны — это помогает в быстром
+записывании чего-нибудь. 
+
+#+begin_src emacs-lisp
+(setq org-capture-templates
+      '(
+	("n" "notes" entry (file+datetree "~/dc/org/lj.org")
+	 "* %?\n")
+	("t" "thoughts" entry (file+datetree "~/dc/org/thoughts.org.gpg")
+	 "* %? \n")
+	("s" "seminar" entry (id "3e61874f-eb92-4e02-bdef-23d972af423e") "* %^{Title}\n %^t--%^t\n :PROPERTIES:\n :DESCRIPTION: %^{Speaker}\n :LOCATION: %^{Location}\n :CUSTOM_ID: %(org-id-get-create)\n :END: \n")
+	("c" "conference" entry (id "7bcd142d-337f-4a46-aacb-40b26cdbe095") "* %^{Title}\n %^t--%^t\n :PROPERTIES:\n :LOCATION: %^{Location}\n :CUSTOM_ID: %(org-id-get-create)\n :END: \n")
+	("l" "link" entry (file "~/dc/org/links.org") "* %^{Description}\n%U\nSource: %x" :prepend t :immediate-finish t)
+	("m" "mutt" entry (file "~/dc/org/mail.org") "* %?\n\n %c\n  %i" :prepend t)
+	("d" "todo" entry (file "~/dc/org/todo.org") "* TODO %^{Description} %^G" :prepend t)
+	("w" "Default template" entry (file+datetree "~/dc/org/capture.org" "Notes")
+	 "* %^{Title}\n%U\nSource: %c\n\n%?"
+         :empty-lines 1
+	 :prepend t)
+	)
+      )
+#+end_src
+
+** Org и LaTeX.
+
+Org-mode умеет экспортировать всё в LaTeX и делать из этого =pdf=. Для
+начала определим шапку получающегося =tex= файла. 
+
+#+begin_src emacs-lisp
+(add-to-list 'org-export-latex-classes
+  '("is-xetex"
+"\\documentclass[11pt,a4paper]{article}
+\\usepackage{graphicx} 
+\\usepackage{amssymb,amsmath}
+\\usepackage[margin=2.3cm]{geometry}
+\\usepackage{xunicode}	
+\\usepackage{xltxtra}	
+\\usepackage{pdfsync}	
+\\usepackage{polyglossia}	
+\\usepackage{indentfirst}	
+\\setdefaultlanguage{russian}	
+\\defaultfontfeatures{Mapping=tex-text}
+\\setromanfont{Charis SIL Compact}
+\\setsansfont{OfficinaSansC}
+\\setmonofont{Consolas}
+\\pagestyle{empty}
+      [NO-DEFAULT-PACKAGES]
+      [NO-PACKAGES]"
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+end_src
+
+А теперь установим, что =pdf= хорошо бы делать с помощью =xelatex=. 
+
+#+begin_src emacs-lisp
+(setq org-latex-to-pdf-process 
+'("xelatex -interaction nonstopmode %f"
+  "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 #+end_src
 
 * Git. :git:
@@ -925,4 +1003,5 @@ Maildir, or by Message-ID."
 
 Ссылка вида =mutt:= будет открывать из емакса =mutt= с уже открытым
 нужным письмом.
+
 
