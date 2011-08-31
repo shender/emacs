@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 lang="en" xml:lang="en">
 <head>
-<title>Emacs Starter Kit</title>
+<title>Emacs: литературный конфиг.</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2011-08-29 19:50:14 CEST"/>
+<meta name="generated" content="2011-08-31 18:56:29 CEST"/>
 <meta name="author" content="Igor Shenderovich"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -85,8 +85,11 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="content">
-<h1 class="title">Emacs Starter Kit</h1>
+<h1 class="title">Emacs: литературный конфиг.</h1>
 
+<p>Это — описание конфига для <code>emacs</code>. Всю папку <code>~/.emacs.d</code> можно найти
+<a href="https://github.com/shender/emacs">тут</a>. 
+</p>
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -110,19 +113,8 @@ lang="en" xml:lang="en">
 <li><a href="#sec-4">Jabber.</a>
 <ul>
 <li><a href="#sec-4-1">Настройки соединения</a></li>
-<li><a href="#sec-4-2">Хоткеи</a>
-<ul>
-<li><a href="#sec-4-2-1">Операции внутри буфера </a></li>
-<li><a href="#sec-4-2-2">Подключение и отключение </a></li>
-</ul>
-</li>
-<li><a href="#sec-4-3">Настройки внешнего вида чата</a>
-<ul>
-<li><a href="#sec-4-3-1">Формат ростера</a></li>
-<li><a href="#sec-4-3-2">Формат строчек чата</a></li>
-<li><a href="#sec-4-3-3">Цвета</a></li>
-</ul>
-</li>
+<li><a href="#sec-4-2">Хоткеи</a></li>
+<li><a href="#sec-4-3">Настройки внешнего вида чата</a></li>
 <li><a href="#sec-4-4">Хуки на jabber-mode</a></li>
 <li><a href="#sec-4-5">История</a></li>
 </ul>
@@ -140,15 +132,10 @@ lang="en" xml:lang="en">
 <li><a href="#sec-6-1">Общие параметры. </a></li>
 <li><a href="#sec-6-2">Дополнительные библиотеки.</a></li>
 <li><a href="#sec-6-3">Хоткеи.</a></li>
-<li><a href="#sec-6-4">Функции. </a>
-<ul>
-<li><a href="#sec-6-4-1">Набор функций для org-capture. </a></li>
-<li><a href="#sec-6-4-2">Выведение плана недели в область извещений. </a></li>
-<li><a href="#sec-6-4-3">Публикация. </a></li>
-<li><a href="#sec-6-4-4">Всплывающие сообщения. </a></li>
-</ul>
-</li>
-<li><a href="#sec-6-5">Calendar. </a></li>
+<li><a href="#sec-6-4">Функции. </a></li>
+<li><a href="#sec-6-5">Календарь. </a></li>
+<li><a href="#sec-6-6">Шаблоны. </a></li>
+<li><a href="#sec-6-7">Org и LaTeX. </a></li>
 </ul>
 </li>
 <li><a href="#sec-7">Git.</a></li>
@@ -212,6 +199,8 @@ lang="en" xml:lang="en">
 (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">cdlatex</span>)
 (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">boxquote</span>)
 (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">autopair</span>)
+(<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">org-latex</span>)
+(autoload 'magit-status <span style="color: #8b2252;">"magit"</span> nil t)
 </pre>
 
 
@@ -612,13 +601,8 @@ lang="en" xml:lang="en">
 <h3 id="sec-4-2">Хоткеи &nbsp;&nbsp;&nbsp;<span class="tag"><span class="hotkeys">hotkeys</span></span></h3>
 <div class="outline-text-3" id="text-4-2">
 
-
-</div>
-
-<div id="outline-container-4-2-1" class="outline-4">
-<h4 id="sec-4-2-1">Операции внутри буфера </h4>
-<div class="outline-text-4" id="text-4-2-1">
-
+<ul>
+<li id="sec-4-2-1">Операции внутри буфера <br/>
 
 <p>
 Переключение на новое сообщение: <code>C-x C-a</code>. 
@@ -636,14 +620,10 @@ lang="en" xml:lang="en">
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-4-2-2" class="outline-4">
-<h4 id="sec-4-2-2">Подключение и отключение </h4>
-<div class="outline-text-4" id="text-4-2-2">
-
+</li>
+</ul>
+<ul>
+<li id="sec-4-2-2">Подключение и отключение <br/>
 
 <p>
 Используется внешний скрипт, так как нужно пробрасывать
@@ -677,7 +657,8 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 
 
-</div>
+</li>
+</ul>
 </div>
 
 </div>
@@ -686,13 +667,8 @@ ssh–туннель. Кроме того, в скрипте работают о
 <h3 id="sec-4-3">Настройки внешнего вида чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="theme">theme</span></span></h3>
 <div class="outline-text-3" id="text-4-3">
 
-
-</div>
-
-<div id="outline-container-4-3-1" class="outline-4">
-<h4 id="sec-4-3-1">Формат ростера &nbsp;&nbsp;&nbsp;<span class="tag"><span class="roster">roster</span></span></h4>
-<div class="outline-text-4" id="text-4-3-1">
-
+<ul>
+<li id="sec-4-3-1">Формат ростера &nbsp;&nbsp;&nbsp;<span class="tag"><span class="roster">roster</span></span><br/>
 
 
 
@@ -706,14 +682,10 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-4-3-2" class="outline-4">
-<h4 id="sec-4-3-2">Формат строчек чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chat">chat</span></span></h4>
-<div class="outline-text-4" id="text-4-3-2">
-
+</li>
+</ul>
+<ul>
+<li id="sec-4-3-2">Формат строчек чата &nbsp;&nbsp;&nbsp;<span class="tag"><span class="chat">chat</span></span><br/>
 
 
 
@@ -732,14 +704,10 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-4-3-3" class="outline-4">
-<h4 id="sec-4-3-3">Цвета &nbsp;&nbsp;&nbsp;<span class="tag"><span class="colors">colors</span></span></h4>
-<div class="outline-text-4" id="text-4-3-3">
-
+</li>
+</ul>
+<ul>
+<li id="sec-4-3-3">Цвета &nbsp;&nbsp;&nbsp;<span class="tag"><span class="colors">colors</span></span><br/>
 
 
 
@@ -759,7 +727,8 @@ ssh–туннель. Кроме того, в скрипте работают о
 
 
 
-</div>
+</li>
+</ul>
 </div>
 
 </div>
@@ -1013,22 +982,27 @@ evince.
 <div class="outline-text-3" id="text-6-1">
 
 
+<p>
+Стандартные вещи: дефолтные папки, файлы и т.д.
+</p>
 
 
 
 <pre class="src src-emacs-lisp">(setq org-directory <span style="color: #8b2252;">"~/dc/org/"</span>)
+(setq org-default-notes-file (concat org-directory <span style="color: #8b2252;">"notes.org"</span>))
 (setq org-return-follows-link t)
 (setq org-completion-use-ido t)
 (setq org-use-property-inheritance t)
 (setq org-agenda-include-diary nil)
 (add-hook 'org-agenda-mode-hook '(<span style="color: #a020f0;">lambda</span> () (hl-line-mode 1)))
+(setq org-export-with-LaTeX-fragments t)
 </pre>
 
 
 
 
 <p>
-Несколько хуков на org-mode.
+Несколько хуков на org-mode: типографика, автоскобки и т.д.
 </p>
 
 
@@ -1038,6 +1012,19 @@ evince.
 (add-hook 'org-mode-hook 'typopunct-mode)
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
+</pre>
+
+
+
+
+<p>
+Для аттачментов: 
+</p>
+
+
+
+<pre class="src src-emacs-lisp">(setq org-attach-directory <span style="color: #8b2252;">"/home/igor/dc/org/data"</span>
+      org-attach-method 'mv)
 </pre>
 
 
@@ -1095,13 +1082,8 @@ evince.
 <h3 id="sec-6-4">Функции. </h3>
 <div class="outline-text-3" id="text-6-4">
 
-
-</div>
-
-<div id="outline-container-6-4-1" class="outline-4">
-<h4 id="sec-6-4-1">Набор функций для org-capture. </h4>
-<div class="outline-text-4" id="text-6-4-1">
-
+<ul>
+<li id="sec-6-4-1">Набор функций для org-capture. <br/>
 
 <p>
 При внешнем вызове org-capture создаётся отдельное окно размером 80x20
@@ -1139,14 +1121,10 @@ XBindkeys выполняет эту функцию по нажатию клав�
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-6-4-2" class="outline-4">
-<h4 id="sec-6-4-2">Выведение плана недели в область извещений. </h4>
-<div class="outline-text-4" id="text-6-4-2">
-
+</li>
+</ul>
+<ul>
+<li id="sec-6-4-2">Выведение плана недели в область извещений. <br/>
 
 <p>
 Функция, срабатывающая при вызове агенды снаружи емакса. Файл агенды
@@ -1168,14 +1146,10 @@ XBindkeys выполняет эту функцию по нажатию клав�
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-6-4-3" class="outline-4">
-<h4 id="sec-6-4-3"><span class="todo TODO"> TODO</span> Публикация. </h4>
-<div class="outline-text-4" id="text-6-4-3">
-
+</li>
+</ul>
+<ul>
+<li id="sec-6-4-3"><span class="todo TODO"> TODO</span> Публикация. <br/>
 
 <p>
 Публикация файлов *.org в простой html, без заголовков и титулов. 
@@ -1198,14 +1172,10 @@ XBindkeys выполняет эту функцию по нажатию клав�
 
 
 
-</div>
-
-</div>
-
-<div id="outline-container-6-4-4" class="outline-4">
-<h4 id="sec-6-4-4">Всплывающие сообщения. </h4>
-<div class="outline-text-4" id="text-6-4-4">
-
+</li>
+</ul>
+<ul>
+<li id="sec-6-4-4">Всплывающие сообщения. <br/>
 
 <p>
 Данная функция написана для вспылывающих сообщений, появляющихся при событиях
@@ -1231,13 +1201,14 @@ XBindkeys выполняет эту функцию по нажатию клав�
 
 
 
-</div>
+</li>
+</ul>
 </div>
 
 </div>
 
 <div id="outline-container-6-5" class="outline-3">
-<h3 id="sec-6-5">Calendar. </h3>
+<h3 id="sec-6-5">Календарь. </h3>
 <div class="outline-text-3" id="text-6-5">
 
 
@@ -1261,6 +1232,103 @@ XBindkeys выполняет эту функцию по нажатию клав�
   calendar-latitude                 48.5     <span style="color: #b22222;">;; </span><span style="color: #b22222;">my...</span>
   calendar-longitude                2.21     <span style="color: #b22222;">;; </span><span style="color: #b22222;">...position</span>
   calendar-location-name <span style="color: #8b2252;">"Paris"</span>)
+</pre>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-6" class="outline-3">
+<h3 id="sec-6-6">Шаблоны. </h3>
+<div class="outline-text-3" id="text-6-6">
+
+
+<p>
+По нажатию <code>C-c</code> вызываются различные шаблоны — это помогает в быстром
+записывании чего-нибудь. 
+</p>
+
+
+
+<pre class="src src-emacs-lisp">(setq org-capture-templates
+      '(
+        (<span style="color: #8b2252;">"n"</span> <span style="color: #8b2252;">"notes"</span> entry (file+datetree <span style="color: #8b2252;">"~/dc/org/lj.org"</span>)
+         <span style="color: #8b2252;">"* %?\n"</span>)
+        (<span style="color: #8b2252;">"t"</span> <span style="color: #8b2252;">"thoughts"</span> entry (file+datetree <span style="color: #8b2252;">"~/dc/org/thoughts.org.gpg"</span>)
+         <span style="color: #8b2252;">"* %? \n"</span>)
+        (<span style="color: #8b2252;">"s"</span> <span style="color: #8b2252;">"seminar"</span> entry (id <span style="color: #8b2252;">"3e61874f-eb92-4e02-bdef-23d972af423e"</span>) <span style="color: #8b2252;">"* %^{Title}\n %^t--%^t\n :PROPERTIES:\n :DESCRIPTION: %^{Speaker}\n :LOCATION: %^{Location}\n :CUSTOM_ID: %(org-id-get-create)\n :END: \n"</span>)
+        (<span style="color: #8b2252;">"c"</span> <span style="color: #8b2252;">"conference"</span> entry (id <span style="color: #8b2252;">"7bcd142d-337f-4a46-aacb-40b26cdbe095"</span>) <span style="color: #8b2252;">"* %^{Title}\n %^t--%^t\n :PROPERTIES:\n :LOCATION: %^{Location}\n :CUSTOM_ID: %(org-id-get-create)\n :END: \n"</span>)
+        (<span style="color: #8b2252;">"l"</span> <span style="color: #8b2252;">"link"</span> entry (file <span style="color: #8b2252;">"~/dc/org/links.org"</span>) <span style="color: #8b2252;">"* %^{Description}\n%U\nSource: %x"</span> <span style="color: #7a378b;">:prepend</span> t <span style="color: #7a378b;">:immediate-finish</span> t)
+        (<span style="color: #8b2252;">"m"</span> <span style="color: #8b2252;">"mutt"</span> entry (file <span style="color: #8b2252;">"~/dc/org/mail.org"</span>) <span style="color: #8b2252;">"* %?\n\n %c\n  %i"</span> <span style="color: #7a378b;">:prepend</span> t)
+        (<span style="color: #8b2252;">"d"</span> <span style="color: #8b2252;">"todo"</span> entry (file <span style="color: #8b2252;">"~/dc/org/todo.org"</span>) <span style="color: #8b2252;">"* TODO %^{Description} %^G"</span> <span style="color: #7a378b;">:prepend</span> t)
+        (<span style="color: #8b2252;">"w"</span> <span style="color: #8b2252;">"Default template"</span> entry (file+datetree <span style="color: #8b2252;">"~/dc/org/capture.org"</span> <span style="color: #8b2252;">"Notes"</span>)
+         <span style="color: #8b2252;">"* %^{Title}\n%U\nSource: %c\n\n%?"</span>
+         <span style="color: #7a378b;">:empty-lines</span> 1
+         <span style="color: #7a378b;">:prepend</span> t)
+        )
+      )
+</pre>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-7" class="outline-3">
+<h3 id="sec-6-7">Org и LaTeX. </h3>
+<div class="outline-text-3" id="text-6-7">
+
+
+<p>
+Org-mode умеет экспортировать всё в LaTeX и делать из этого <code>pdf</code>. Для
+начала определим шапку получающегося <code>tex</code> файла. 
+</p>
+
+
+
+<pre class="src src-emacs-lisp">(add-to-list 'org-export-latex-classes
+  '(<span style="color: #8b2252;">"is-xetex"</span>
+<span style="color: #8b2252;">"\\documentclass[11pt,a4paper]{article}</span>
+<span style="color: #8b2252;">\\usepackage{graphicx} </span>
+<span style="color: #8b2252;">\\usepackage{amssymb,amsmath}</span>
+<span style="color: #8b2252;">\\usepackage[margin=2.3cm]{geometry}</span>
+<span style="color: #8b2252;">\\usepackage{xunicode}  </span>
+<span style="color: #8b2252;">\\usepackage{xltxtra}   </span>
+<span style="color: #8b2252;">\\usepackage{pdfsync}   </span>
+<span style="color: #8b2252;">\\usepackage{polyglossia}       </span>
+<span style="color: #8b2252;">\\usepackage{indentfirst}       </span>
+<span style="color: #8b2252;">\\setdefaultlanguage{russian}   </span>
+<span style="color: #8b2252;">\\defaultfontfeatures{Mapping=tex-text}</span>
+<span style="color: #8b2252;">\\setromanfont{Charis SIL Compact}</span>
+<span style="color: #8b2252;">\\setsansfont{OfficinaSansC}</span>
+<span style="color: #8b2252;">\\setmonofont{Consolas}</span>
+<span style="color: #8b2252;">\\pagestyle{empty}</span>
+<span style="color: #8b2252;">      [NO-DEFAULT-PACKAGES]</span>
+<span style="color: #8b2252;">      [NO-PACKAGES]"</span>
+     (<span style="color: #8b2252;">"\\section{%s}"</span> . <span style="color: #8b2252;">"\\section*{%s}"</span>)
+     (<span style="color: #8b2252;">"\\subsection{%s}"</span> . <span style="color: #8b2252;">"\\subsection*{%s}"</span>)
+     (<span style="color: #8b2252;">"\\subsubsection{%s}"</span> . <span style="color: #8b2252;">"\\subsubsection*{%s}"</span>)
+     (<span style="color: #8b2252;">"\\paragraph{%s}"</span> . <span style="color: #8b2252;">"\\paragraph*{%s}"</span>)
+     (<span style="color: #8b2252;">"\\subparagraph{%s}"</span> . <span style="color: #8b2252;">"\\subparagraph*{%s}"</span>)))
+</pre>
+
+
+
+
+<p>
+А теперь установим, что <code>pdf</code> хорошо бы делать с помощью <code>xelatex</code>. 
+</p>
+
+
+
+<pre class="src src-emacs-lisp">(setq org-latex-to-pdf-process 
+'(<span style="color: #8b2252;">"xelatex -interaction nonstopmode %f"</span>
+  <span style="color: #8b2252;">"xelatex -interaction nonstopmode %f"</span>)) <span style="color: #b22222;">;; </span><span style="color: #b22222;">for multiple passes</span>
 </pre>
 
 
@@ -1899,13 +1967,14 @@ global-mode-string
 Ссылка вида <code>mutt:</code> будет открывать из емакса <code>mutt</code> с уже открытым
 нужным письмом.
 </p>
+
 </div>
 </div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2011-08-29 19:50:14 CEST</p>
+<p class="date">Date: 2011-08-31 18:56:29 CEST</p>
 <p class="author">Author: Igor Shenderovich</p>
 <p class="email"><a href="mailto:shender.i AT gmail.com">shender.i AT gmail.com</a></p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
