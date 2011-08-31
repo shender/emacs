@@ -14,7 +14,7 @@
                          "lisp" (expand-file-name
                                  "org" sitelisp-dir)))
 
-(add-to-list 'load-path (expand-file-name "~/dc/org/init/src"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/src"))
 
 ;; Load up Org Mode and Babel
 (require 'org-install)
