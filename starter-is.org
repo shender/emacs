@@ -3,6 +3,9 @@
 #+EMAIL: shender.i AT gmail.com
 #+OPTIONS:  author:t creator:t timestamp:t email:t toc:t num:nil H:2
 
+Это — описание конфига для =emacs=. Всю папку =~/.emacs.d= можно найти
+[[https://github.com/shender/emacs][тут]]. 
+
 * Загрузка основных пакетов. :load:
 
 Типографика ([[http://www.emacswiki.org/emacs/TypographicalPunctuationMarks][typopunct]]), облегчённая работа с TeX ([[http://www.gnu.org/software/auctex/][AuCTeX]], [[http://staff.science.uva.nl/~dominik/Tools/cdlatex/][CDLaTeX]]),
